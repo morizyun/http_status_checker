@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+#coding: utf-8
+
+require 'thor'
+require 'http_status_checker'
+require 'pry'
+
+class Command < Thor
+  default_command :http_status_checker
+
+  # コマンドラインがちゃんとうごくようにする
+  desc 'http_status_checker', 'Checking whether can access url'
+  option :url, :type => :string, :aliases => :'-u', :desc => 'url for checking'
+  def http_status_checker
+    results = HttpStatusChecker.check(options[:url])
+    results.each do |result|
+      result.each do |url, res|
+        puts "url: #{url}"
+        puts "response: #{res}"
+      end
+    end
+  end
+end
+
+Command.start
