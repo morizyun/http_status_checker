@@ -3,7 +3,6 @@
 
 require 'thor'
 require 'http_status_checker'
-require 'pry'
 
 class Command < Thor
   default_command :http_status_checker
