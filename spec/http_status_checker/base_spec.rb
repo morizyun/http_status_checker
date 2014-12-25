@@ -3,10 +3,9 @@ require 'spec_helper'
 describe HttpStatusChecker::Connection do
   let!(:valid_url) { 'http://www.yahoo.co.jp/' }
   let!(:redirect_url) { 'http://yahoo.co.jp/' }
-  let!(:morizyun_404) { 'http://morizyun.github.io/404/' }
 
-  describe '.get_header' do
-    context 'when get http valid url' do
+  describe '.check' do
+    context 'when set valid url' do
       it 'returns is_alive = true, redirect = nil, error = nil' do
         response = HttpStatusChecker.check(valid_url)
         expect(response.first[valid_url][:is_alive]).to eq(true)
@@ -15,7 +14,37 @@ describe HttpStatusChecker::Connection do
       end
     end
 
-    context 'when get http redirect url' do
+    context 'when set 2 urls' do
+      let!(:morizyun_css) { 'http://morizyun.github.io/blog/css3-html-front-coding-book-review/' }
+      let!(:morizyun_js) { 'http://morizyun.github.io/blog/javascript-learning-tech-yourself_01/' }
+      it 'returns is_alive = true, error = nil' do
+        response, time = measure_time do
+          HttpStatusChecker.check([morizyun_css, morizyun_js])
+        end
+        expect(parse(response, morizyun_css)[:is_alive]).to eq(true)
+        expect(parse(response, morizyun_css)[:error]).to    be_nil
+        expect(parse(response, morizyun_js)[:is_alive]).to  eq(true)
+        expect(parse(response, morizyun_js)[:error]).to     be_nil
+        expect(time).to be >= 1.0
+      end
+    end
+
+    context 'when set 2 urls & wait_sec = 2' do
+      let!(:morizyun_css) { 'http://morizyun.github.io/blog/css3-html-front-coding-book-review/' }
+      let!(:morizyun_js) { 'http://morizyun.github.io/blog/javascript-learning-tech-yourself_01/' }
+      it 'returns is_alive = true, error = nil' do
+        response, time = measure_time do
+          HttpStatusChecker.check([morizyun_css, morizyun_js], wait_sec = 2)
+        end
+        expect(parse(response, morizyun_css)[:is_alive]).to eq(true)
+        expect(parse(response, morizyun_css)[:error]).to    be_nil
+        expect(parse(response, morizyun_js)[:is_alive]).to  eq(true)
+        expect(parse(response, morizyun_js)[:error]).to     be_nil
+        expect(time).to be >= 2.0
+      end
+    end
+
+    context 'when set http redirect url' do
       it 'returns is_alive = true, redirect = valid_url, error = nil' do
         response = HttpStatusChecker.check(redirect_url)
         expect(response.first[redirect_url][:is_alive]).to eq(true)
@@ -24,7 +53,7 @@ describe HttpStatusChecker::Connection do
       end
     end
 
-    context 'when get http invalid url' do
+    context 'when set http invalid url' do
       let!(:invalid_url) { 'http://www.nothing-dummy.com/' }
       it 'returns is_alive = false, redirect = nil, error present' do
         response = HttpStatusChecker.check(invalid_url)
@@ -34,13 +63,13 @@ describe HttpStatusChecker::Connection do
       end
     end
 
-    context 'when get 404 error' do
-      let!(:invalid_url) { 'http://morizyun.github.io/404/' }
+    context 'when set 404 error' do
+      let!(:morizyun_404) { 'http://morizyun.github.io/404/' }
       it 'returns is_alive = false, redirect = nil, error present' do
-        response = HttpStatusChecker.check(invalid_url)
-        expect(response.first[invalid_url][:is_alive]).to eq(false)
-        expect(response.first[invalid_url][:redirect_url]).to be_nil
-        expect(response.first[invalid_url][:error]).not_to be_nil
+        response = HttpStatusChecker.check(morizyun_404)
+        expect(response.first[morizyun_404][:is_alive]).to eq(false)
+        expect(response.first[morizyun_404][:redirect_url]).to be_nil
+        expect(response.first[morizyun_404][:error]).not_to be_nil
       end
     end
   end
@@ -54,4 +83,18 @@ describe HttpStatusChecker::Connection do
       end
     end
   end
+
+  def parse(response, search_url)
+    response.each do |hash|
+      return hash.values.first if hash.keys.first == search_url
+    end
+  end
+
+  def measure_time(&block)
+    start_at = Time.now
+    result = block.call
+    finish_at = Time.now
+    return [result, finish_at - start_at]
+  end
 end
+

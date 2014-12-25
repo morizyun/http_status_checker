@@ -3,19 +3,18 @@ module HttpStatusChecker
     THREAD_LIMIT = 5.freeze
     REDIRECT_MAX = 5.freeze
     RETRY_MAX = 1.freeze
-    WAIT_SEC = 1.freeze
 
     class InvalidResponseError < StandardError; end
     class InvalidRedirectError < StandardError; end
 
-    def check(urls)
+    def check(urls, wait_sec = 1)
       results = []
 
       host_hash = to_host_hash(urls)
       Parallel.each(host_hash, in_threads: host_hash.keys.count) do |_, urls|
         urls.map.with_index(1) do |url, idx|
           results << get_response(url)
-          sleep(WAIT_SEC) if urls.count != idx
+          sleep(wait_sec) if urls.count != idx
         end
       end
 
@@ -24,7 +23,6 @@ module HttpStatusChecker
 
     private
 
-    # TODO codeをちゃんと取得できるようにする
     def get_response(url, redirect_url = nil, redirect_count = 0, retry_count = 0, result = nil)
       result = get_header(redirect_url || url)
       if result.is_a?(Net::HTTPRedirection) # redirect
@@ -32,7 +30,6 @@ module HttpStatusChecker
         raise InvalidRedirectError if redirect_url.nil? || redirect_count > REDIRECT_MAX
         get_response(url, redirect_url, redirect_count + 1, 0)
       elsif result.is_a?(Net::HTTPOK)
-        binding.pry
         { url => { code: result.code, is_alive: true, redirect_url: redirect_url } }
       else
         raise InvalidResponseError, "Unknown class #{result.class} : #{result.to_s}"
@@ -42,7 +39,8 @@ module HttpStatusChecker
         retry_count += 1
         retry
       end
-      { url => { code: result.code, is_alive: false, error: e.message } }
+      code = result ? result.code : nil
+      { url => { code: code, is_alive: false, error: e.message } }
     end
 
     def to_host_hash(urls)

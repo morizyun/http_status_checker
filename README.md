@@ -32,7 +32,7 @@ Or install it yourself as:
 
     require 'http_status_checker'
 
-    HttpStatusChecker.check 'http://morizyun.github.io
+    HttpStatusChecker.check ['http://morizyun.github.io', 'http://www.yahoo.co.jp']
 
 ## Contributing
 
