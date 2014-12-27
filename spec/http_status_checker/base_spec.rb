@@ -14,6 +14,17 @@ describe HttpStatusChecker::Connection do
       end
     end
 
+    context 'when set valid url with invalid http status' do
+      let!(:atnd_http_url)  { 'http://atnd.org/events/14386' }
+      let!(:atnd_https_url) { 'https://atnd.org/events/14386' }
+      it 'returns is_alive = true, redirect = nil, error = nil' do
+        response = HttpStatusChecker.check(atnd_http_url)
+        expect(response.first[atnd_http_url][:is_alive]).to eq(true)
+        expect(response.first[atnd_http_url][:redirect_url]).to eq(atnd_https_url)
+        expect(response.first[atnd_http_url][:error]).to be_nil
+      end
+    end
+
     context 'when set 2 urls' do
       let!(:morizyun_css) { 'http://morizyun.github.io/blog/css3-html-front-coding-book-review/' }
       let!(:morizyun_js) { 'http://morizyun.github.io/blog/javascript-learning-tech-yourself_01/' }

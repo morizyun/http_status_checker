@@ -4,9 +4,6 @@ module HttpStatusChecker
     REDIRECT_MAX = 5.freeze
     RETRY_MAX = 1.freeze
 
-    class InvalidResponseError < StandardError; end
-    class InvalidRedirectError < StandardError; end
-
     def check(urls, wait_sec = 1)
       results = []
 
@@ -23,13 +20,13 @@ module HttpStatusChecker
 
     private
 
-    def get_response(url, redirect_url = nil, redirect_count = 0, retry_count = 0, result = nil)
-      result = get_header(redirect_url || url)
-      if result.is_a?(Net::HTTPRedirection) # redirect
-        redirect_url = result['location']
-        raise InvalidRedirectError if redirect_url.nil? || redirect_count > REDIRECT_MAX
-        get_response(url, redirect_url, redirect_count + 1, 0)
-      elsif result.is_a?(Net::HTTPOK)
+    def get_response(url, redirect_url = nil, redirect_count = 0, retry_count = 0)
+      result = HttpStatusChecker::Connection.get_header(redirect_url || url)
+      location_url = result['location']
+      if !location_url.nil? && (redirect_url || url) != location_url
+        raise InvalidRedirectError if redirect_count > REDIRECT_MAX
+        get_response(url, location_url, redirect_count + 1, 0)
+      elsif result.code =~ /^(2|3)[0-9]{2}$/
         { url => { code: result.code, is_alive: true, redirect_url: redirect_url } }
       else
         raise InvalidResponseError, "Unknown class #{result.class} : #{result.to_s}"

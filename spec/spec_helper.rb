@@ -14,7 +14,6 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'http_status_checker'
 require 'rspec'
 require 'fakeweb'
-require 'pry'
 
 def fixture(path)
   File.read("#{File.dirname(__FILE__)}/fixtures/#{path}")
