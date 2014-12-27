@@ -6,6 +6,7 @@ describe HttpStatusChecker::Connection do
     let!(:redirect_url) { 'http://yahoo.co.jp/' }
     let!(:atnd_http_url) { 'http://atnd.org/events/14386' }
     let!(:atnd_https_url) { 'https://atnd.org/events/14386' }
+    let!(:doorkeeper_url) { 'http://mashupawards.doorkeeper.jp/events/18590' }
 
     context 'when get http valid url' do
       it 'return Net::HTTPOK response' do
@@ -28,6 +29,14 @@ describe HttpStatusChecker::Connection do
         response = HttpStatusChecker::Connection.get_header(atnd_https_url)
         expect(response.is_a?(Net::HTTPRedirection)).to be == true
         expect(response['location']).to eq(atnd_https_url)
+      end
+    end
+
+    context 'when get http url' do
+      it 'return Net::HTTPRedirection response' do
+        response = HttpStatusChecker::Connection.get_header(doorkeeper_url)
+        expect(response.is_a?(Net::HTTPOK)).to be == true
+        expect(response['location']).to be_nil
       end
     end
 

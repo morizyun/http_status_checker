@@ -1,4 +1,5 @@
 require 'net/http'
+require 'open-uri'
 require 'parallel'
 
 require 'http_status_checker/version'
