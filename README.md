@@ -1,4 +1,4 @@
-# HttpStatusChecker
+# HttpStatusChecker [![Build Status](https://travis-ci.org/morizyun/http_status_checker.svg)](https://travis-ci.org/morizyun/http_status_checker) [![Code Climate](https://codeclimate.com/github/morizyun/http_status_checker/badges/gpa.svg)](https://codeclimate.com/github/morizyun/http_status_checker) [![Test Coverage](https://codeclimate.com/github/morizyun/http_status_checker/badges/coverage.svg)](https://codeclimate.com/github/morizyun/http_status_checker)
 
 Easily Checking http status by http header with Multi-threaded
 
@@ -24,15 +24,21 @@ Or install it yourself as:
 
     $ gem install http_status_checker
 
-## Usage Command Line
+## Usage on Command Line
 
-    $ http_status_checker http://morizyun.github.io
+    $ http_status_checker -u http://morizyun.github.io
+    #=> url: http://morizyun.github.io
+    #=> response: {:code=>"200", :is_alive=>true, :redirect_url=>nil}
 
-## Usage Ruby Program
+## Usage on Ruby Program
 
     require 'http_status_checker'
 
-    HttpStatusChecker.check ['http://morizyun.github.io', 'http://www.yahoo.co.jp']
+    urls = ['http://morizyun.github.io', 'http://www.yahoo.co.jp']
+    interval_sec = 1
+    HttpStatusChecker.check urls, interval_sec
+    #=> [{"http://morizyun.github.io"=>{:code=>"200", :is_alive=>true, :redirect_url=>nil}}, 
+    #=> {"http://www.yahoo.co.jp"=>{:code=>"200", :is_alive=>true, :redirect_url=>nil}}]
 
 ## Contributing
 

@@ -3,8 +3,9 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.5
+  - 2.2.0
 bundler_args: --jobs=2
-script: bundle exec rspec
+script: CODECLIMATE_REPO_TOKEN=447dc71fd8e33c83633ed56349a98a676c4f27519a452df8bd871c3320b369ff bundle exec rspec
 branches:
   only:
     - master
