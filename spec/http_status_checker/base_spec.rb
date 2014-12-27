@@ -104,8 +104,7 @@ describe HttpStatusChecker::Connection do
     context 'when post 2urls' do
       it 'returns host with urls array in hash' do
         host_hash = HttpStatusChecker.__send__(:to_host_hash, [valid_url, redirect_url])
-        expect(host_hash['www.yahoo.co.jp'.to_sym]).to eq([valid_url])
-        expect(host_hash['yahoo.co.jp'.to_sym]).to eq([redirect_url])
+        expect(host_hash['yahoo'.to_sym]).to eq([valid_url, redirect_url])
       end
     end
   end

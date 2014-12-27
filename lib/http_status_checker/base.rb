@@ -49,7 +49,7 @@ module HttpStatusChecker
 
       host_hash = {}
       urls.each do |url|
-        host = URI.parse(url).host.to_sym
+        host = Domainatrix.parse(url).domain.to_sym
         host_hash[host] = host_hash[host].nil? ? [url] : host_hash[host] << url
       end
       return host_hash
