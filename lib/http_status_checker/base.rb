@@ -22,6 +22,13 @@ module HttpStatusChecker
 
     def get_response(url, redirect_url = nil, redirect_count = 0, retry_count = 0)
       result = HttpStatusChecker::Connection.get_header(redirect_url || url)
+      parse_response(redirect_count, redirect_url, result, url)
+    rescue => e
+      get_response(url, nil, redirect_count + 1, retry_count + 1) if retry_count < RETRY_MAX
+      { url => { code: result ? result.code : nil, is_alive: false, error: e.message } }
+    end
+
+    def parse_response(redirect_count, redirect_url, result, url)
       location_url = result['location']
       if !location_url.nil? && (redirect_url || url) != location_url
         raise InvalidRedirectError if redirect_count > REDIRECT_MAX
@@ -31,13 +38,6 @@ module HttpStatusChecker
       else
         raise InvalidResponseError, "Unknown class #{result.class} : #{result.to_s}"
       end
-    rescue => e
-      if retry_count < RETRY_MAX
-        retry_count += 1
-        retry
-      end
-      code = result ? result.code : nil
-      { url => { code: code, is_alive: false, error: e.message } }
     end
 
     def to_host_hash(urls)

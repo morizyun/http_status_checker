@@ -78,6 +78,7 @@ describe HttpStatusChecker::Connection do
       let!(:morizyun_404) { 'http://morizyun.github.io/404/' }
       it 'returns is_alive = false, redirect = nil, error present' do
         response = HttpStatusChecker.check(morizyun_404)
+        expect(response.first[morizyun_404][:code]).to eq('404')
         expect(response.first[morizyun_404][:is_alive]).to eq(false)
         expect(response.first[morizyun_404][:redirect_url]).to be_nil
         expect(response.first[morizyun_404][:error]).not_to be_nil
