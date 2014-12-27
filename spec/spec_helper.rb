@@ -13,20 +13,15 @@ end
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'http_status_checker'
 require 'rspec'
-require 'fakeweb'
-
-def fixture(path)
-  File.read("#{File.dirname(__FILE__)}/fixtures/#{path}")
-end
-
-def stub_get(path, fixture_path, options={})
-  opts = {
-      :body => fixture(fixture_path),
-      :content_type => 'application/json; charset=utf-8'
-  }.merge(options)
-  FakeWeb.register_uri(:get, "#{path}", opts)
-end
+require 'vcr'
+require 'benchmark'
 
 RSpec.configure do |config|
   config.order = 'random'
+end
+
+VCR.configure do |c|
+  c.cassette_library_dir = 'spec/vcr'
+  c.hook_into :webmock
+  c.allow_http_connections_when_no_cassette = true
 end

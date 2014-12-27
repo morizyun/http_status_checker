@@ -9,34 +9,50 @@ describe HttpStatusChecker::Connection do
     let!(:doorkeeper_url) { 'http://mashupawards.doorkeeper.jp/events/18590' }
 
     context 'when get http valid url' do
+      before do
+        VCR.use_cassette 'connection/valid_url' do
+          @response = HttpStatusChecker::Connection.get_header(valid_url)
+        end
+      end
       it 'return Net::HTTPOK response' do
-        response = HttpStatusChecker::Connection.get_header(valid_url)
-        expect(response.is_a?(Net::HTTPOK)).to be == true
-        expect(response['location']).to be_nil
+        expect(@response.is_a?(Net::HTTPOK)).to be == true
+        expect(@response['location']).to be_nil
       end
     end
 
     context 'when get http redirect url' do
+      before do
+        VCR.use_cassette 'connection/redirect_url' do
+          @response = HttpStatusChecker::Connection.get_header(redirect_url)
+        end
+      end
       it 'return Net::HTTPRedirection response' do
-        response = HttpStatusChecker::Connection.get_header(redirect_url)
-        expect(response.is_a?(Net::HTTPRedirection)).to be == true
-        expect(response['location']).to eq(valid_url)
+        expect(@response.is_a?(Net::HTTPRedirection)).to be == true
+        expect(@response['location']).to eq(valid_url)
       end
     end
 
     context 'when get invalid http status(atnd.org)' do
+      before do
+        VCR.use_cassette 'connection/atnd_https_url' do
+          @response = HttpStatusChecker::Connection.get_header(atnd_https_url)
+        end
+      end
       it 'return Net::HTTPRedirection response' do
-        response = HttpStatusChecker::Connection.get_header(atnd_https_url)
-        expect(response.is_a?(Net::HTTPRedirection)).to be == true
-        expect(response['location']).to eq(atnd_https_url)
+        expect(@response.is_a?(Net::HTTPRedirection)).to be == true
+        expect(@response['location']).to eq(atnd_https_url)
       end
     end
 
     context 'when get http url' do
+      before do
+        VCR.use_cassette 'connection/doorkeeper_url' do
+          @response = HttpStatusChecker::Connection.get_header(doorkeeper_url)
+        end
+      end
       it 'return Net::HTTPRedirection response' do
-        response = HttpStatusChecker::Connection.get_header(doorkeeper_url)
-        expect(response.is_a?(Net::HTTPOK)).to be == true
-        expect(response['location']).to be_nil
+        expect(@response.is_a?(Net::HTTPOK)).to be == true
+        expect(@response['location']).to be_nil
       end
     end
 
