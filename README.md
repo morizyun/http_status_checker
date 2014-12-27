@@ -4,9 +4,9 @@ Easily Checking http status by http header with Multi-threaded
 
 ## Features
 
-* Get http status by only http header
+* Get http status
 * A threaded (fast) per host name
-* Warnings for links that redirect to valid links
+* Return redirect url and errors when get http access
 
 ## Installation
 
@@ -26,7 +26,7 @@ Or install it yourself as:
 
 ## Usage Command Line
 
-    $ http_status http://morizyun.github.io
+    $ http_status_checker http://morizyun.github.io
 
 ## Usage Ruby Program
 

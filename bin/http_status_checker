@@ -7,11 +7,9 @@ require 'http_status_checker'
 class Command < Thor
   default_command :http_status_checker
 
-  # コマンドラインがちゃんとうごくようにする
   desc 'http_status_checker', 'Checking whether can access url'
-  option :url, :type => :string, :aliases => :'-u', :desc => 'url for checking'
-  def http_status_checker
-    results = HttpStatusChecker.check(options[:url])
+  def http_status_checker(url)
+    results = HttpStatusChecker.check(url)
     results.each do |result|
       result.each do |url, res|
         puts "url: #{url}"
