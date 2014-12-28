@@ -2,7 +2,7 @@ module HttpStatusChecker
   module Base
     THREAD_LIMIT = 5.freeze
     REDIRECT_MAX = 5.freeze
-    RETRY_MAX = 2.freeze
+    RETRY_MAX = 3.freeze
 
     def check(urls, wait_sec = 1)
       results = []
@@ -34,7 +34,7 @@ module HttpStatusChecker
     def parse_response(redirect_count, redirect_url, result, url, wait_sec)
       location_url = result['location']
       if !location_url.nil? && (redirect_url || url) != location_url
-        raise InvalidRedirectError if redirect_count > REDIRECT_MAX
+        raise InvalidRedirectError if redirect_count >= REDIRECT_MAX
         get_response(url, wait_sec, location_url, redirect_count + 1, 0)
       elsif result.code =~ /^(2|3)[0-9]{2}$/
         { url => { code: result.code, is_alive: true, redirect_url: redirect_url } }

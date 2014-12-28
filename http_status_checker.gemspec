@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = HttpStatusChecker::VERSION
   spec.authors       = ['morizyun']
   spec.email         = ['merii.ken@gmail.com']
-  spec.summary       = %q{Easily Checking http status by http header with Multi-threaded}
-  spec.description   = %q{Easily Checking http status by http header with Multi-threaded}
+  spec.summary       = %q{Easily Checking http status with Multi-threaded}
+  spec.description   = %q{Easily Checking http status with Multi-threaded}
   spec.homepage      = ''
   spec.license       = 'MIT'
 

@@ -1,6 +1,6 @@
 # HttpStatusChecker [![Build Status](https://travis-ci.org/morizyun/http_status_checker.svg)](https://travis-ci.org/morizyun/http_status_checker) [![Code Climate](https://codeclimate.com/github/morizyun/http_status_checker/badges/gpa.svg)](https://codeclimate.com/github/morizyun/http_status_checker) [![Test Coverage](https://codeclimate.com/github/morizyun/http_status_checker/badges/coverage.svg)](https://codeclimate.com/github/morizyun/http_status_checker)
 
-Easily Checking http status by http header with Multi-threaded
+Easily Checking http status with Multi-threaded
 
 ## Features
 
