@@ -1,4 +1,6 @@
-# HttpStatusChecker [![Build Status](https://travis-ci.org/morizyun/http_status_checker.svg)](https://travis-ci.org/morizyun/http_status_checker) [![Code Climate](https://codeclimate.com/github/morizyun/http_status_checker/badges/gpa.svg)](https://codeclimate.com/github/morizyun/http_status_checker) [![Test Coverage](https://codeclimate.com/github/morizyun/http_status_checker/badges/coverage.svg)](https://codeclimate.com/github/morizyun/http_status_checker)
+# HttpStatusChecker 
+
+[![Build Status](https://travis-ci.org/morizyun/http_status_checker.svg)](https://travis-ci.org/morizyun/http_status_checker) [![Code Climate](https://codeclimate.com/github/morizyun/http_status_checker/badges/gpa.svg)](https://codeclimate.com/github/morizyun/http_status_checker) [![Test Coverage](https://codeclimate.com/github/morizyun/http_status_checker/badges/coverage.svg)](https://codeclimate.com/github/morizyun/http_status_checker) [![endorse](https://api.coderwall.com/morizyun/endorsecount.png)](https://coderwall.com/morizyun)
 
 Easily Checking http status with Multi-threaded
 
